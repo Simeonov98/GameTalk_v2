@@ -2,6 +2,7 @@
 
 namespace AppBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -48,6 +49,13 @@ class User
      * @ORM\Column(name="profile_pic", type="text")
      */
     private $profilePic;
+
+    /**
+     * @var ArrayCollection
+     *
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Article", mappedBy="author")
+     */
+    private $articles;
 
 
     /**
@@ -154,6 +162,24 @@ class User
     public function getProfilePic()
     {
         return $this->profilePic;
+    }
+
+    /**
+     * @return ArrayCollection
+     */
+    public function getArticles()
+    {
+        return $this->articles;
+    }
+
+    /**
+     * @param ArrayCollection $articles
+     * @return User
+     */
+    public function setArticles(ArrayCollection $articles)
+    {
+        $this->articles = $articles;
+        return $this;
     }
 }
 

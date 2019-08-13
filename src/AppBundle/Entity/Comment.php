@@ -2,6 +2,7 @@
 
 namespace AppBundle\Entity;
 
+use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -29,7 +30,7 @@ class Comment
     private $content;
 
     /**
-     * @var \DateTime
+     * @var DateTime
      *
      * @ORM\Column(name="date_added", type="datetime")
      */
@@ -73,7 +74,7 @@ class Comment
     /**
      * Set dateAdded
      *
-     * @param \DateTime $dateAdded
+     * @param DateTime $dateAdded
      *
      * @return Comment
      */
@@ -87,7 +88,7 @@ class Comment
     /**
      * Get dateAdded
      *
-     * @return \DateTime
+     * @return DateTime
      */
     public function getDateAdded()
     {
