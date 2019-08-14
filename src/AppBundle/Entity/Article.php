@@ -60,7 +60,7 @@ class Article
     /**
      * @var User
      *
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\User", inversedBy="article")
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\User", inversedBy="articles")
      */
     private $author;
 

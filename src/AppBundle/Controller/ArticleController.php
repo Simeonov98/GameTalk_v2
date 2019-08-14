@@ -40,6 +40,7 @@ class ArticleController extends Controller
      * @Route("/new", name="article_new",methods={"GET", "POST"})
      * @param Request $request
      * @return RedirectResponse|Response
+     * @throws \Exception
      */
     public function newAction(Request $request)
     {
