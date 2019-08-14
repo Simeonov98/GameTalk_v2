@@ -49,6 +49,24 @@ class Message
      * @ORM\Column(name="is_seen", type="boolean")
      */
     private $isSeen;
+    /**
+     * @var User
+     *
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\User", inversedBy="senderMessages")
+     */
+    private $sender;
+    /**
+     * @var User
+     *
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\User", inversedBy="recipientMessages")
+     */
+    private $recipient;
+
+    public function __construct()
+    {
+        $this->dateAdded = new DateTime('now');
+        $this->setIsSeen(false);
+    }
 
 
     /**
@@ -134,27 +152,55 @@ class Message
     }
 
     /**
-     * Set isSeen
-     *
-     * @param boolean $isSeen
-     *
-     * @return Message
+     * @return bool
      */
-    public function setIsSeen($isSeen)
+    public function isSeen(): bool
+    {
+        return $this->isSeen;
+    }
+
+    /**
+     * @param bool $isSeen
+     */
+    public function setIsSeen(bool $isSeen): void
     {
         $this->isSeen = $isSeen;
+    }
 
+    /**
+     * @return User
+     */
+    public function getSender(): User
+    {
+        return $this->sender;
+    }
+
+    /**
+     * @param User $sender
+     * @return Message
+     */
+    public function setSender(User $sender): Message
+    {
+        $this->sender = $sender;
         return $this;
     }
 
     /**
-     * Get isSeen
-     *
-     * @return bool
+     * @return User
      */
-    public function getIsSeen()
+    public function getRecipient(): User
     {
-        return $this->isSeen;
+        return $this->recipient;
+    }
+
+    /**
+     * @param User $recipient
+     * @return Message
+     */
+    public function setRecipient(User $recipient): Message
+    {
+        $this->recipient = $recipient;
+        return $this;
     }
 }
 

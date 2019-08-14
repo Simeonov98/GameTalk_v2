@@ -36,6 +36,26 @@ class Comment
      */
     private $dateAdded;
 
+    /**
+     * @var User
+     *
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\User", inversedBy="comments")
+     */
+    private $author;
+
+    /**
+     * @var Article
+     *
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Article",inversedBy="comments")
+     */
+    private $article;
+
+
+    public function __construct()
+    {
+        $this->dateAdded = new DateTime('now');
+    }
+
 
     /**
      * Get id
@@ -93,6 +113,42 @@ class Comment
     public function getDateAdded()
     {
         return $this->dateAdded;
+    }
+
+    /**
+     * @return User
+     */
+    public function getAuthor(): User
+    {
+        return $this->author;
+    }
+
+    /**
+     * @param User $author
+     * @return Comment
+     */
+    public function setAuthor(User $author)
+    {
+        $this->author = $author;
+        return $this;
+    }
+
+    /**
+     * @return Article
+     */
+    public function getArticle(): Article
+    {
+        return $this->article;
+    }
+
+    /**
+     * @param Article $article
+     * @return Comment
+     */
+    public function setArticle(Article $article)
+    {
+        $this->article = $article;
+        return $this;
     }
 }
 
