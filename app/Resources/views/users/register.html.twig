@@ -14,7 +14,7 @@
     </br>
     <div class="container login-container">
         <div class="row">
-            <div class="col-md-4 login-form-1">
+
                 <form class="form-horizontal" action="{{ path('user_register') }}" method="post">
                     <fieldset>
                         <h2 style="color: #808080;">Welcome</h2>
@@ -22,25 +22,27 @@
                         <br/>
                         <br/>
                         <div class="form-group">
-                            <label class="col-lg-20 control-label" for="user_email"><font
+                            <label class=" control-label" for="user_email"><font
                                         color="#f0f8ff">Email</font></label>
                             <input class="form-control" id="user_email" placeholder="Email"
                                    value="{{ user.email|default(null) }}" name="user[email]" required type="email">
                         </div>
                         <div class="form-group">
-                            <label class="col-sm-4 control-label" for="user_username"><font
+                            <label class=" control-label" for="user_username"><font
                                         color="#f0f8ff">Username</font></label>
 
                             <input type="text" class="form-control" id="user_username" placeholder="Full Name"
                                    value="{{ user.username|default(null) }}" name="user[username]" required>
                         </div>
                         <div class="form-group">
-                            <label class="col-sm-4 control-label" for="user_password"><font
+                            <label class=" control-label" for="user_password_first"><font
                                         color="#f0f8ff">Password</font></label>
-
-                            <input type="password" class="form-control" id="user_password" placeholder="Password"
-                                   name="user[password]" required>
-
+                            <input type="password" class="form-control" id="user_password_first" placeholder="Password" name="user[password][first]" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label" for="user_password_second"><font
+                                        color="#f0f8ff">Confirm Password</font></label>
+                                <input type="password" class="form-control" id="user_password_second" placeholder="Password" name="user[password][second]" required>
                         </div>
 
                         <div class="form-group">
@@ -51,9 +53,10 @@
                             <button type="submit" class="btn btn-info">Register</button>
 
                         </div>
+                        {{  form_row(form._token) }}
                     </fieldset>
                 </form>
-            </div>
+
         </div>
     </div>
     </br>
