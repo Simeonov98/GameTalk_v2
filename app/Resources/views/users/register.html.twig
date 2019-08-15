@@ -2,14 +2,61 @@
 
 {% block main %}
 
-    <form name="register"  method="post">
-        <input type="text" name="user[email]"/>
-        <input type="text" name="user[password]"/>
-        <input type="text" name="user[username]"/>
-        <input type="hidden" name="csrf_token" value="{{ csrf_token('register') }}"/>
-        <input type="submit" value="Register">
+    {#    <form name="register"  method="post">#}
+    {#        <input type="text" name="user[email]"/>#}
+    {#        <input type="text" name="user[password]"/>#}
+    {#        <input type="text" name="user[username]"/>#}
+    {#        <input type="hidden" name="csrf_token" value="{{ csrf_token('register') }}"/>#}
+    {#        <input type="submit" value="Register">#}
 
 
-    </form>
+    {#    </form>#}
+    </br>
+    <div class="container login-container">
+        <div class="row">
+            <div class="col-md-4 login-form-1">
+                <form class="form-horizontal" action="{{ path('user_register') }}" method="post">
+                    <fieldset>
+                        <h2 style="color: #808080;">Welcome</h2>
+
+                        <br/>
+                        <br/>
+                        <div class="form-group">
+                            <label class="col-lg-20 control-label" for="user_email"><font
+                                        color="#f0f8ff">Email</font></label>
+                            <input class="form-control" id="user_email" placeholder="Email"
+                                   value="{{ user.email|default(null) }}" name="user[email]" required type="email">
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-4 control-label" for="user_username"><font
+                                        color="#f0f8ff">Username</font></label>
+
+                            <input type="text" class="form-control" id="user_username" placeholder="Full Name"
+                                   value="{{ user.username|default(null) }}" name="user[username]" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-4 control-label" for="user_password"><font
+                                        color="#f0f8ff">Password</font></label>
+
+                            <input type="password" class="form-control" id="user_password" placeholder="Password"
+                                   name="user[password]" required>
+
+                        </div>
+
+                        <div class="form-group">
+
+                            {#                            <input type="submit" class="btnSubmit" value="Login"/>#}{#<h3>#}
+                            {#                                <span style="color:#808080;"><code><big><span style="font-size:20px;">Login</span></big></code></span></h3>#}
+
+                            <button type="submit" class="btn btn-info">Register</button>
+
+                        </div>
+                    </fieldset>
+                </form>
+            </div>
+        </div>
+    </div>
+    </br>
+    </br>
 
 {% endblock %}

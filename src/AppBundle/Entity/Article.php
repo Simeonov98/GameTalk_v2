@@ -80,7 +80,7 @@ class Article
     /**
      * @var ArrayCollection|Category[]
      *
-     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Category", mappedBy="id")
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Category", mappedBy="article")
      */
     private $genres;
 

@@ -5,6 +5,7 @@ namespace AppBundle\Controller;
 use AppBundle\Entity\User;
 use AppBundle\Form\UserType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\Config\Definition\Exception\Exception;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -12,7 +13,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class UserController extends Controller
 {
     /**
-     * @Route("register")
+     * @Route("register",name="user_register")
      * @param Request $request
      * @return Response
      */
@@ -22,11 +23,10 @@ class UserController extends Controller
         $form = $this->createForm(UserType::class, $user);
         $form->handleRequest($request);
 
-        if ($form->isValid()){
-            $passwordHash =
-                $this->get('security.password_encoder')
-                ->encodePassword($user, $user->getPassword());
+        if ($form->isSubmitted()){
+            $passwordHash = $this->get('security.password_encoder')->encodePassword($user, $user->getPassword());
             $user->setPassword($passwordHash);
+            $user->setProfilePic("");
             $em= $this->getDoctrine()->getManager();
             $em->persist($user);
             $em->flush();
@@ -36,4 +36,27 @@ class UserController extends Controller
 
         return $this->render('users/register.html.twig');
     }
+
+    /**
+     *
+     * @Route("/profile", name="user_profile")
+     */
+    public function profile()
+    {
+        $userRepository = $this->getDoctrine()->getRepository(User::class);
+
+        $currentUser = $userRepository->find($this->getUser());
+
+        return $this->render("users/profile.html.twig",
+            ['user' => $currentUser]);
+    }
+
+    /**
+     * @Route("/logout", name="security_logout")
+     */
+    public function logout()
+    {
+        throw new Exception("Logout failed!");
+    }
+
 }

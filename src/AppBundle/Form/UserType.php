@@ -19,7 +19,7 @@ class UserType extends AbstractType
             ->add('email', TextType::class)
             ->add('password',TextType::class)
             ->add('username',TextType::class)
-            ->add('profilePic');
+        ->add('profilePic');
     }/**
      * {@inheritdoc}
      */
