@@ -1,7 +1,10 @@
 <?php
 
 namespace AppBundle\Repository;
-
+use AppBundle\Entity\Role;
+use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\EntityRepository;
+use Doctrine\ORM\Mapping;
 /**
  * RoleRepository
  *
@@ -10,4 +13,9 @@ namespace AppBundle\Repository;
  */
 class RoleRepository extends \Doctrine\ORM\EntityRepository
 {
+    public function __construct(EntityManagerInterface $em,
+                                Mapping\ClassMetadata $metaData = null)
+    {
+        parent::__construct($em,$metaData ==null ? new Mapping\ClassMetadata(Role::class): $metaData);
+    }
 }

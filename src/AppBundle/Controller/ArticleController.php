@@ -3,9 +3,12 @@
 namespace AppBundle\Controller;
 
 use AppBundle\Entity\Article;
+use AppBundle\Form\ArticleType;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\Form;
 use Symfony\Component\Form\FormInterface;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -35,37 +38,46 @@ class ArticleController extends Controller
     }
 
     /**
-     * Creates a new article entity.
+     * @Route("/create", name="article_create", methods={"GET"})
      *
-     * @Route("/new", name="article_new",methods={"GET", "POST"})
+     * @Security("is_granted('IS_AUTHENTICATED_FULLY')")
+     * @return Response
+     */
+    public function create()
+    {
+        return $this->render('article/create.html.twig',
+            [
+                'form' => $this
+                    ->createForm(ArticleType::class)
+                    ->createView()
+            ]);
+    }
+
+    /**
+     * @Route("/create", methods={"POST"})
      * @param Request $request
-     * @return RedirectResponse|Response
+     * @return RedirectResponse
      * @throws \Exception
      */
-    public function newAction(Request $request)
+    public function createProcess(Request $request)
     {
         $article = new Article();
-        $form = $this->createForm('AppBundle\Form\ArticleType', $article);
+        $form = $this->createForm(ArticleType::class, $article);
         $form->handleRequest($request);
+        $this->uploadFile($form, $article);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $em = $this->getDoctrine()->getManager();
-            $em->persist($article);
-            $em->flush();
 
-            return $this->redirectToRoute('article_show', array('id' => $article->getId()));
-        }
+        $this->articleService->create($article);
 
-        return $this->render('article/new.html.twig', array(
-            'article' => $article,
-            'form' => $form->createView(),
-        ));
+        $this->addFlash("info", "Article successfully created!");
+        return $this->redirectToRoute("blog_index");
+
     }
 
     /**
      * Finds and displays a article entity.
      *
-     * @Route("/{id}", name="article_show",methods={"GET"})
+     * @Route("/article/{id}", name="article_view",methods={"GET"})
      * @param Article $article
      * @return Response
      */
@@ -82,7 +94,7 @@ class ArticleController extends Controller
     /**
      * Displays a form to edit an existing article entity.
      *
-     * @Route("/{id}/edit", name="article_edit", methods={"GET", "POST"})
+     * @Route("/edit/{id}", name="article_edit", methods={"GET", "POST"})
      * @param Request $request
      * @param Article $article
      * @return RedirectResponse|Response
@@ -142,5 +154,26 @@ class ArticleController extends Controller
             ->setMethod('DELETE')
             ->getForm()
         ;
+    }
+    /**
+     * @param FormInterface $form
+     * @param Article $article
+     */
+    private function uploadFile(FormInterface $form, Article $article)
+    {
+        /**
+         * @var UploadedFile $file
+         */
+        $file = $form['image']->getData();
+        $fileName = md5(uniqid()) . '.' . $file->guessExtension();
+
+        if ($file) {
+            $file->move(
+                $this->getParameter('article_directory'),
+                $fileName
+            );
+
+            $article->setImage($fileName);
+        }
     }
 }

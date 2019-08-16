@@ -2,6 +2,12 @@
 
 namespace AppBundle\Repository;
 
+use AppBundle\Entity\Article;
+use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\Mapping;
+use Doctrine\ORM\OptimisticLockException;
+use Doctrine\ORM\ORMException;
+
 /**
  * ArticleRepository
  *
@@ -10,4 +16,57 @@ namespace AppBundle\Repository;
  */
 class ArticleRepository extends \Doctrine\ORM\EntityRepository
 {
+    public function __construct(EntityManagerInterface $em, Mapping\ClassMetadata $metaData = null)
+    {
+        parent::__construct($em,
+            $metaData == null ?
+                new Mapping\ClassMetadata(Article::class):
+                $metaData);
+    }
+
+    /**
+     * @param Article $article
+     * @return bool
+     * @throws ORMException
+     */
+    public function insert(Article $article)
+    {
+        try {
+            $this->_em->persist($article);
+            $this->_em->flush();
+            return true;
+        } catch (OptimisticLockException $e) {
+            return false;
+        }
+    }
+    /**
+     * @param Article $article
+     * @return bool
+     * @throws ORMException
+     */
+    public function update(Article $article)
+    {
+        try {
+            $this->_em->merge($article);
+            $this->_em->flush();
+            return true;
+        } catch (OptimisticLockException $e) {
+            return false;
+        }
+    }
+    /**
+     * @param Article $article
+     * @return bool
+     * @throws ORMException
+     */
+    public function remove(Article $article)
+    {
+        try {
+            $this->_em->remove($article);
+            $this->_em->flush();
+            return true;
+        } catch (OptimisticLockException $e) {
+            return false;
+        }
+    }
 }

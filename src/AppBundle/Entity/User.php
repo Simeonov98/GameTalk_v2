@@ -220,6 +220,15 @@ class User implements UserInterface
         $this->articles[] = $article;
         return $this;
     }
+    /**
+     * @param Role $role
+     * @return User
+     */
+    public function addRole(Role $role)
+    {
+        $this->roles[] = $role;
+        return $this;
+    }
 
     /**
      * Returns the roles granted to the user.
