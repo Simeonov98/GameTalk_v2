@@ -1,18 +1,7 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-    {#    <h1>Article creation</h1>#}
-
-    {#    {{ form_start(form) }}#}
-    {#        {{ form_widget(form) }}#}
-    {#        <input type="submit" value="Create" />#}
-    {#    {{ form_end(form) }}#}
-
-    {#    <ul>#}
-    {#        <li>#}
-    {#            <a href="{{ path('article_index') }}">Back to the list</a>#}
-    {#        </li>#}
-    {#    </ul>#}
+<font color="#C0C0C0">
     <div class="container body-content span=8 offset=2">
         <div class="well">
             <form class="form-horizontal" enctype="multipart/form-data" action="{{ path('article_create') }}"
@@ -57,4 +46,5 @@
             </form>
         </div>
     </div>
+</font>
 {% endblock %}

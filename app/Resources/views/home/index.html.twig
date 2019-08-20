@@ -1,5 +1,62 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-    homepage
+<header>
+    <div class="container body-content">
+        <div class="row">
+            {% for msg in app.session.flashbag.get('info') %}
+                <div class="alert alert-success" id="info">
+                    {{ msg }}
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+            {% endfor %}
+
+            {% for msg in app.session.flashbag.get('errors') %}
+                <div class="alert alert-success">
+                    {{ msg }}
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-label="true">x</span>
+                    </button>
+                </div>
+            {% endfor %}
+            {% for article in articles %}
+                <div class="col-md-6">
+                    <article>
+                        <header>
+                            <h2>{{ article.title }}</h2>
+                        </header>
+                        <a href="{{ path('article_view', {id: article.id}) }}">
+                            <img src="{{ asset('uploads/images/articles/' ~ article.image) }}" width="300px" height="150px">
+                        </a>
+
+
+                        <p>
+                            {{ article.summary }}
+                        </p>
+                        <small>
+                            Views: {{ article.getViewCount() }}
+                        </small>
+                        <br/>
+                        <small>
+                            Date Added: {{ article.dateAdded|date("F jS \\a\\t g:ia") }}
+                        </small>
+                        <small class="author">
+                            {{ article.author.username }}
+                        </small>
+
+
+                        <footer>
+                            <div class="pull-right">
+                                <a class="btn btn-default btn-xs"
+                                   href="{{ path('article_view',{id: article.id}) }}">Read more &raquo;</a>
+                            </div>
+                        </footer>
+                    </article>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</header>
 {% endblock %}

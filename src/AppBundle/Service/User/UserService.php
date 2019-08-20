@@ -4,7 +4,7 @@ namespace AppBundle\Service\User;
 use AppBundle\Entity\User;
 use AppBundle\Repository\UserRepository;
 use AppBundle\Service\Encryption\ArgonEncryption;
-use RoleServiceInterface;
+use AppBundle\Service\Role\RoleServiceInterface;
 use Symfony\Component\Security\Core\Security;
 
 class UserService implements UserServiceInterface

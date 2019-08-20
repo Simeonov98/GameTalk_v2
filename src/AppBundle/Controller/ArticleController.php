@@ -3,7 +3,10 @@
 namespace AppBundle\Controller;
 
 use AppBundle\Entity\Article;
+use AppBundle\Entity\User;
 use AppBundle\Form\ArticleType;
+use AppBundle\Service\Article\ArticleServiceInterface;
+use AppBundle\Service\Comment\CommentServiceInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\Form;
@@ -22,20 +25,24 @@ use Symfony\Component\Routing\Annotation\Route;
 class ArticleController extends Controller
 {
     /**
-     * Lists all article entities.
-     *
-     * @Route("/", name="article_index", methods={"GET"})
+     * @var ArticleServiceInterface
      */
-    public function indexAction()
+    private $articleService;
+
+    private $commentService;
+
+    /**
+     * ArticleController constructor.
+     * @param ArticleServiceInterface $articleService
+     * @param CommentServiceInterface $commentService
+     */
+    public function __construct(ArticleServiceInterface $articleService,
+                                CommentServiceInterface $commentService)
     {
-        $em = $this->getDoctrine()->getManager();
-
-        $articles = $em->getRepository('AppBundle:Article')->findAll();
-
-        return $this->render('article/index.html.twig', array(
-            'articles' => $articles,
-        ));
+        $this->articleService = $articleService;
+        $this->commentService = $commentService;
     }
+
 
     /**
      * @Route("/create", name="article_create", methods={"GET"})
@@ -75,86 +82,112 @@ class ArticleController extends Controller
     }
 
     /**
-     * Finds and displays a article entity.
+     * @Route("/edit/{id}", name="article_edit", methods={"GET"})
      *
-     * @Route("/article/{id}", name="article_view",methods={"GET"})
-     * @param Article $article
+     * @Security("is_granted('IS_AUTHENTICATED_FULLY')")
+     * @param int $id
      * @return Response
      */
-    public function showAction(Article $article)
+    public function edit(int $id)
     {
-        $deleteForm = $this->createDeleteForm($article);
+        /** @var Article $article */
+        $article =  $this ->articleService->getOne($id);
 
-        return $this->render('article/show.html.twig', array(
-            'article' => $article,
-            'delete_form' => $deleteForm->createView(),
-        ));
-    }
-
-    /**
-     * Displays a form to edit an existing article entity.
-     *
-     * @Route("/edit/{id}", name="article_edit", methods={"GET", "POST"})
-     * @param Request $request
-     * @param Article $article
-     * @return RedirectResponse|Response
-     */
-    public function editAction(Request $request, Article $article)
-    {
-        $deleteForm = $this->createDeleteForm($article);
-        $editForm = $this->createForm('AppBundle\Form\ArticleType', $article);
-        $editForm->handleRequest($request);
-
-        if ($editForm->isSubmitted() && $editForm->isValid()) {
-            $this->getDoctrine()->getManager()->flush();
-
-            return $this->redirectToRoute('article_edit', array('id' => $article->getId()));
+        if (null === $article) {
+            return $this->redirectToRoute("blog_index");
+        }
+        if ($this->isAuthorOrAdmin($article)) {
+            return $this->redirectToRoute("blog_index");
         }
 
-        return $this->render('article/edit.html.twig', array(
-            'article' => $article,
-            'edit_form' => $editForm->createView(),
-            'delete_form' => $deleteForm->createView(),
-        ));
+
+
+        return $this->render('article/edit.html.twig',
+            [
+                'form' => $this
+                    ->createForm(Article::class)
+                    ->createView(),
+                'article' => $article
+            ]);
     }
 
     /**
-     * Deletes a article entity.
+     * @Route("/edit/{id}", methods={"POST"})
      *
-     * @Route("/{id}", name="article_delete",methods={"DELETE"})
+     * @Security("is_granted('IS_AUTHENTICATED_FULLY')")
      * @param Request $request
-     * @param Article $article
-     * @return RedirectResponse
+     * @param int $id
+     * @return Response
      */
-    public function deleteAction(Request $request, Article $article)
+    public function editProcess(Request $request, int $id)
     {
-        $form = $this->createDeleteForm($article);
+        /** @var Article $article */
+        $article =  $this ->articleService->getOne($id);
+
+        $form = $this->createForm(ArticleType::class, $article);
+        $form->handleRequest($request);
+        $this->uploadFile($form, $article);
+        $this->articleService->edit($article);
+
+        return $this->redirectToRoute("blog_index");
+    }
+
+    /**
+     * @Route("/delete/{id}", name="article_delete", methods={"GET"})
+     *
+     * @Security("is_granted('IS_AUTHENTICATED_FULLY')")
+     * @param int $id
+     * @return Response
+     */
+    public function delete(int $id)
+    {
+        /** @var Article $article */
+        $article =  $this ->articleService->getOne($id);
+
+        if (null == $article) {
+            return $this->redirectToRoute("blog_index");
+        }
+
+        if ($this->isAuthorOrAdmin($article)) {
+            return $this->redirectToRoute("blog_index");
+        }
+
+        return $this->render('article/delete.html.twig',
+            [
+                'form' => $this->createForm(ArticleType::class)->createView(),
+                'article' => $article
+            ]);
+    }
+
+    /**
+     * @Route("/delete/{id}", methods={"POST"})
+     *
+     * @Security("is_granted('IS_AUTHENTICATED_FULLY')")
+     * @param Request $request
+     * @param int $id
+     * @return Response
+     */
+    public function deleteProcess(Request $request, int $id)
+    {
+        /** @var Article $article */
+        $article =  $this ->articleService->getOne($id);
+
+        $form = $this->createForm(ArticleType::class, $article);
+        $form->remove('imageURL');
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $em = $this->getDoctrine()->getManager();
-            $em->remove($article);
-            $em->flush();
-        }
+        $this->articleService->delete($article);
 
-        return $this->redirectToRoute('article_index');
+        return $this->redirectToRoute("blog_index");
+
     }
 
     /**
-     * Creates a form to delete a article entity.
+     * @Route("/article/{id}", name="article_view")
      *
-     * @param Article $article The article entity
-     *
-     * @return FormInterface
+     * @param $id
+     * @return Response
      */
-    private function createDeleteForm(Article $article)
-    {
-        return $this->createFormBuilder()
-            ->setAction($this->generateUrl('article_delete', array('id' => $article->getId())))
-            ->setMethod('DELETE')
-            ->getForm()
-        ;
-    }
     /**
      * @param FormInterface $form
      * @param Article $article
@@ -175,5 +208,65 @@ class ArticleController extends Controller
 
             $article->setImage($fileName);
         }
+    }
+    /**
+     * @Route("/article/{id}", name="article_view")
+     *
+     * @param $id
+     * @return Response
+     */
+    public function view($id)
+    {
+        $article = $this ->articleService->getOne($id);
+
+
+        if (null === $article) {
+            return $this->redirectToRoute("blog_index");
+        }
+
+        $article->setViewCount($article->getViewCount() + 1);
+        $em = $this->getDoctrine()->getManager();
+        $em->persist($article);
+        $em->flush();
+
+        $comments = $this->commentService->getAllByArticleId($id);
+
+
+        return $this->render("article/view.html.twig",
+            [
+                'article' => $article,
+                'comments' => $comments
+            ]);
+    }
+    /**
+     * @param Article $article
+     * @return bool
+     */
+    private function isAuthorOrAdmin(Article $article)
+    {
+        /** @var User $currentUser */
+        $currentUser = $this->getUser();
+
+        if (!$currentUser->isAuthor($article) && !$currentUser->isAdmin()) {
+            return false;
+        }
+        return true;
+    }
+
+
+    /**
+     * @Route("/articles/my_articles", name="my_articles")
+     * @return Response
+     */
+    public function getAllArticleByUsers()
+    {
+        $articles = $this->articleService->getAllArticlesByAuthor();
+
+        return $this->render(
+            "article/myArticles.html.twig",
+            [
+                'articles' => $articles
+            ]
+        );
     }
 }
