@@ -1,6 +1,7 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
+<font color="#C0C0C0">
 <header>
     <div class="container body-content">
         <div class="row">
@@ -42,8 +43,9 @@
                         <small>
                             Date Added: {{ article.dateAdded|date("F jS \\a\\t g:ia") }}
                         </small>
+                        <br/>
                         <small class="author">
-                            {{ article.author.username }}
+                           Author: {{ article.author.username }}
                         </small>
 
 
@@ -59,4 +61,5 @@
         </div>
     </div>
 </header>
+</font>
 {% endblock %}
