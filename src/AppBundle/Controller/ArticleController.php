@@ -91,21 +91,20 @@ class ArticleController extends Controller
     public function edit(int $id)
     {
         /** @var Article $article */
-        $article =  $this ->articleService->getOne($id);
+        $article = $this->articleService->getOne($id);
 
         if (null === $article) {
             return $this->redirectToRoute("blog_index");
         }
-        if ($this->isAuthorOrAdmin($article)) {
+        if (!$this->isAuthorOrAdmin($article)) {
             return $this->redirectToRoute("blog_index");
         }
-
 
 
         return $this->render('article/edit.html.twig',
             [
                 'form' => $this
-                    ->createForm(Article::class)
+                    ->createForm(ArticleType::class)
                     ->createView(),
                 'article' => $article
             ]);
@@ -122,7 +121,7 @@ class ArticleController extends Controller
     public function editProcess(Request $request, int $id)
     {
         /** @var Article $article */
-        $article =  $this ->articleService->getOne($id);
+        $article = $this->articleService->getOne($id);
 
         $form = $this->createForm(ArticleType::class, $article);
         $form->handleRequest($request);
@@ -142,13 +141,13 @@ class ArticleController extends Controller
     public function delete(int $id)
     {
         /** @var Article $article */
-        $article =  $this ->articleService->getOne($id);
+        $article = $this->articleService->getOne($id);
 
         if (null == $article) {
             return $this->redirectToRoute("blog_index");
         }
 
-        if ($this->isAuthorOrAdmin($article)) {
+        if (!$this->isAuthorOrAdmin($article)) {
             return $this->redirectToRoute("blog_index");
         }
 
@@ -170,7 +169,7 @@ class ArticleController extends Controller
     public function deleteProcess(Request $request, int $id)
     {
         /** @var Article $article */
-        $article =  $this ->articleService->getOne($id);
+        $article = $this->articleService->getOne($id);
 
         $form = $this->createForm(ArticleType::class, $article);
         $form->remove('imageURL');
@@ -201,14 +200,12 @@ class ArticleController extends Controller
         $fileName = md5(uniqid()) . '.' . $file->guessExtension();
 
         if ($file) {
-            $file->move(
-                $this->getParameter('article_directory'),
-                $fileName
-            );
+            $file->move($this->getParameter('article_directory'), $fileName);
 
             $article->setImage($fileName);
         }
     }
+
     /**
      * @Route("/article/{id}", name="article_view")
      *
@@ -217,7 +214,7 @@ class ArticleController extends Controller
      */
     public function view($id)
     {
-        $article = $this ->articleService->getOne($id);
+        $article = $this->articleService->getOne($id);
 
 
         if (null === $article) {
@@ -238,6 +235,7 @@ class ArticleController extends Controller
                 'comments' => $comments
             ]);
     }
+
     /**
      * @param Article $article
      * @return bool

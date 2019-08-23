@@ -27,11 +27,12 @@ class UserController extends Controller
      */
     private $messageService;
 
-    public function __construct(UserServiceInterface $userService,MessageServiceInterface $messageService)
+    public function __construct(UserServiceInterface $userService, MessageServiceInterface $messageService)
     {
         $this->userService = $userService;
         $this->messageService = $messageService;
     }
+
     /**
      * @Route("register", name="user_register",methods={"GET"})
      * @param Request $request
@@ -57,13 +58,13 @@ class UserController extends Controller
 
 
         if (null !== $this->userService->findOneByEmail($form['email']->getData())) {
-            $email= $this->userService->findOneByEmail($form['email']->getData())->getEmail();
+            $email = $this->userService->findOneByEmail($form['email']->getData())->getEmail();
             $this->addFlash("errors", "Email $email already taken!");
             return $this->returnRegisterView($user);
         }
 
-        if ($form['password']['first']->getData() !== $form['password']['second']->getData()){
-            $this->addFlash("errors","Password mismatch!");
+        if ($form['password']['first']->getData() !== $form['password']['second']->getData()) {
+            $this->addFlash("errors", "Password mismatch!");
             return $this->returnRegisterView($user);
         }
 
@@ -84,8 +85,9 @@ class UserController extends Controller
         return $this->render("users/profile.html.twig",
             ['user' => $currentUser]);
     }
+
     /**
-     * @Route("/profile/edit",name="user_edit_profile", methods={"GET"})
+     * @Route("/profile/edit", name="user_edit_profile", methods={"GET"})
      * @Security("is_granted('IS_AUTHENTICATED_FULLY')")
      * @return Response
      */
@@ -103,7 +105,7 @@ class UserController extends Controller
     }
 
     /**
-     * @Route("/profile/{id}/edit", methods={"POST"})
+     * @Route("/profile/edit", methods={"POST"})
      * @Security("is_granted('IS_AUTHENTICATED_FULLY')")
      * @param Request $request
      * @return Response
@@ -112,17 +114,18 @@ class UserController extends Controller
     {
         $currentUser = $this->userService->currentUser();
         $form = $this->createForm(UserType::class, $currentUser);
-        $form->handleRequest($request);
+
         if ($currentUser->getEmail() === $request->request->get('email')) {
             $form->remove('email');
         }
-        $form->remove('password');
 
+        $form->remove('password');
+        $form->handleRequest($request);
         $this->uploadFile($form, $currentUser);
 
-        $this->userService->save($currentUser);
+        $this->userService->update($currentUser);
 
-        return $this->redirect("user_profile");
+        return $this->redirectToRoute("user_profile");
 
     }
 
@@ -133,6 +136,7 @@ class UserController extends Controller
     {
         throw new Exception("Logout failed!");
     }
+
     /**
      * @param FormInterface $form
      * @param User $user
@@ -142,7 +146,7 @@ class UserController extends Controller
         /**
          * @var UploadedFile $file
          */
-        $file = $form['image']->getData();
+        $file = $form['profilePic']->getData();
         $fileName = md5(uniqid()) . '.' . $file->guessExtension();
 
         if ($file) {

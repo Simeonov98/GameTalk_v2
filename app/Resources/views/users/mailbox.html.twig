@@ -1,6 +1,16 @@
 {% extends 'base.html.twig' %}
 
 {% block main %}
-
+<font color="#C0C0C0" >
+    {% for msg in messages %}
+        <a href="{{ path('user_mailbox_message', {id: msg.id}) }}">{{ msg.about }}</a>
+        {% if not msg.isSeen %}
+            <span style="color:red; float: right">Unread</span>
+        {% else %}
+            <span style="color:green; float: right">Read</span>
+        {% endif %}
+        <hr />
+    {% endfor %}
+</font>
 {% endblock %}
 

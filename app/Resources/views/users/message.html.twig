@@ -1,6 +1,54 @@
 {% extends 'base.html.twig' %}
 
 {% block main %}
+<font color="#C0C0C0" >
+    {% for msg in app.session.flashbag.get('message') %}
+        <div class="alert alert-success" id="info">
+            {{ msg }}
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+    {% endfor %}
+    <h1>Hello {{ user.email }}</h1>
 
+    <h3>{{ user.username }}</h3>
+    <br/>
+
+    <div><img class="rounded-circle" src="{{ asset('uploads/images/users/'
+            ~ user.profilePic) }}" width="100px" height="100px"/>
+    </div>
+
+    {% if app.getUser() %}
+        <br/>
+        <a class="btn btn-success btn-sm" id="add">Add Message</a>
+        <div id="message"></div>
+        <br />
+    {% endif %}
+
+    <script>
+        $('#add').click(function () {
+            $('#message').empty();
+            let commentForm =
+                `
+                <form method="post" action="{{ path('message_create', {id: user.id}) }}">
+                <div class="form-group">
+
+                        <div class="col-sm-6">
+                        <input class="form-control" type="text" name="message[about]" />
+                        <textarea class="form-control" rows="6" id="article_content"
+                                  name="comment[content]"></textarea>
+                            <input type="submit" value="Add" class="btn btn-success btn-sm">
+                        </div>
+                    </div>
+
+                </form>
+                `;
+
+            $('#message').append(commentForm);
+            $('#message').toggle();
+        })
+    </script>
+</font>
 {% endblock %}
 

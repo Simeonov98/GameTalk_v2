@@ -2,68 +2,76 @@
 
 {% block main %}
     <font color="#C0C0C0">
-    <div class="container body-content">
-        <div class="row">
-            <div class="col-md-12">
-                <article>
-                    <a href="{{ path('article_view', {id: article.id}) }}">
-                        <img src="{{ asset('uploads/images/articles/' ~ article.image) }}" width="300px" height="150px">
-                    </a>
-                    <header>
-                        <h2>{{ article.title }}</h2>
-                    </header>
+        <div class="container body-content">
+            <div class="row">
+                <div class="col-md-12">
+                    <article>
+                        <a href="{{ path('article_view', {id: article.id}) }}">
+                            <img src="{{ asset('uploads/images/articles/' ~ article.image) }}" width="300px"
+                                 height="150px">
+                        </a>
+                        <header>
+                            <font color="#daa520">
+                                <h3>{{ article.title }}</h3>
+                            </font>
+                        </header>
 
-                    <p>
-                        {{ article.content }}
-                    </p>
+                        <p>
+                            {{ article.content }}
+                        </p>
 
-                    <small class="author">
-                        {{ article.author.username }}
-                    </small>
+                        <small class="author">
+                            Author: {{ article.author.username }}
+                        </small>
 
-                    <footer>
-                        <div class="pull-right">
-                            {% if app.getUser() and (app.getUser().isAuthor(article) or app.getUser().isAdmin() ) %}
-                                <a class="btn btn-success btn-xs" href="{{ path('article_edit',{id:article.id}) }}">Edit
-                                    &raquo;</a>
-                                <a class="btn btn-danger btn-xs" href="{{ path('article_delete',{id:article.id}) }}">Delete
-                                    &raquo;</a>
-                            {% endif %}
-                            <a class="btn btn-default btn-xs" href="{{ path('blog_index') }}">Back &raquo;</a>
+                        <footer>
+                            <div class="pull-right">
+                                {% if app.getUser() and (app.getUser().isAuthor(article) or app.getUser().isAdmin() ) %}
+                                    <a class="btn btn-success btn-xs" href="{{ path('article_edit',{id:article.id}) }}">Edit
+                                        &raquo;</a>
+                                    <a class="btn btn-danger btn-xs"
+                                       href="{{ path('article_delete',{id:article.id}) }}">Delete
+                                        &raquo;</a>
+                                {% endif %}
+                                <a class="btn btn-default btn-xs" href="{{ path('blog_index') }}">Back &raquo;</a>
 
-                        </div>
-                    </footer>
-                </article>
+                            </div>
+                        </footer>
+                    </article>
 
-                {% if app.getUser() %}
-                    <br/>
-                    <a class="btn btn-success btn-sm" id="add">Add Comment</a>
-                    <div id="comment"></div>
-                    <br />
-                {% endif %}
+                    {% if app.getUser() %}
+                        <br/>
+                        <a class="btn btn-primary btn-sm" id="add">Add Comment</a>
+                        <div id="comment"></div>
+                        <br/>
+                    {% endif %}
 
-                {% for comment in comments %}
-                    <p>{{ comment.content }}  </p>
-                    <br /> {{ comment.author.username }} | <a href="{{ path('user_message', {id: comment.author.id}) }}">
-                    <img class="rounded-circle"
-                         src="{{ asset('uploads/images/users/' ~ comment.author.id) }}"
-                         width="20px" height="20" />
-                </a><br />
-                    <small>{{ article.dateAdded|date("F jS \\a\\t g:ia") }}</small>
-                    <hr />
-                {% endfor %}
+                    {% for comment in comments %}
+                        <p>{{ comment.content }}  </p>
+                        <font color="#daa520">
+                            <br/> {{ comment.author.username }} | <a
+                                    href="{{ path('user_message', {id: comment.author.id}) }}">
+                                <img src="{{ asset('uploads/images/users/' ~ comment.author.id) }}"
+                                     width="20px" height="20"/>
+                            </a><br/></font>
+                        <font color="fuchsia">
+                            <small>{{ article.dateAdded|date("F jS \\a\\t g:ia") }}</small>
+                            <hr/>
+                        </font>
 
+                    {% endfor %}
+
+                </div>
             </div>
         </div>
-    </div>
-    <div>
+        <div>
 
-    </div>
-    <script>
-        $('#add').click(function () {
-            $('#comment').empty();
-            let commentForm =
-                `
+        </div>
+        <script>
+            $('#add').click(function () {
+                $('#comment').empty();
+                let commentForm =
+                    `
                 <form method="post" action="{{ path('comment_create', {id: article.id}) }}">
                 <div class="form-group">
 
@@ -77,9 +85,9 @@
                 </form>
                 `;
 
-            $('#comment').append(commentForm);
-            $('#comment').toggle();
-        })
-    </script>
+                $('#comment').append(commentForm);
+                $('#comment').toggle();
+            })
+        </script>
     </font>
 {% endblock %}

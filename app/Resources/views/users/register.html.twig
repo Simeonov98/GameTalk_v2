@@ -1,47 +1,41 @@
 {% extends 'base.html.twig' %}
 
 {% block main %}
-
-    {#    <form name="register"  method="post">#}
-    {#        <input type="text" name="user[email]"/>#}
-    {#        <input type="text" name="user[password]"/>#}
-    {#        <input type="text" name="user[username]"/>#}
-    {#        <input type="hidden" name="csrf_token" value="{{ csrf_token('register') }}"/>#}
-    {#        <input type="submit" value="Register">#}
-
-
-    {#    </form>#}
-    </br>
+    <br/>
+    {% for msg in app.session.flashbag.get('errors') %}
+        <div class="alert alert-danger">
+            {{ msg }}
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-label="true">x</span>
+            </button>
+        </div>
+    {% endfor %}
+    <font color="#C0C0C0">
     <div class="container login-container">
         <div class="row">
 
                 <form class="form-horizontal" action="{{ path('user_register') }}" method="post">
                     <fieldset>
-                        <h2 style="color: #808080;">Welcome</h2>
-
-
+                        <br/>
+                        <h2>Welcome</h2>
                         <br/>
                         <div class="form-group">
-                            <label class=" control-label" for="user_email"><font
-                                        color="#f0f8ff">Email</font></label>
+                            <label class="control-label" for="user_email">Email</label>
                             <input class="form-control" id="user_email" placeholder="Email"
                                    value="{{ user.email|default(null) }}" name="user[email]" required type="email">
                         </div>
                         <div class="form-group">
-                            <label class=" control-label" for="user_username"><font
-                                        color="#f0f8ff">Username</font></label>
+                            <label class="control-label" for="user_username">Username</label>
 
-                            <input type="text" class="form-control" id="user_username" placeholder="Full Name"
+                            <input type="text" class="form-control" id="user_username" placeholder="Username"
                                    value="{{ user.username|default(null) }}" name="user[username]" required>
                         </div>
                         <div class="form-group">
-                            <label class=" control-label" for="user_password_first"><font
-                                        color="#f0f8ff">Password</font></label>
+                            <label class="control-label" for="user_password_first">Password</label>
                             <input type="password" class="form-control" id="user_password_first" placeholder="Password" name="user[password][first]" required>
                         </div>
                         <div class="form-group">
-                            <label class="control-label" for="user_password_second"><font
-                                        color="#f0f8ff">Confirm Password</font></label>
+                            <label class="control-label" for="user_password_second">Confirm Password</label>
                                 <input type="password" class="form-control" id="user_password_second" placeholder="Password" name="user[password][second]" required>
                         </div>
 
@@ -61,5 +55,5 @@
     </div>
     </br>
     </br>
-
+    </font>
 {% endblock %}
