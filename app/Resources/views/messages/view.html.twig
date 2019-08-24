@@ -1,0 +1,52 @@
+{% extends 'base.html.twig' %}
+
+{% block main %}
+
+    {% for msg in app.session.flashbag.get('message') %}
+        <div class="alert alert-success" id="info">
+            {{ msg }}
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+    {% endfor %}
+
+    <h3>About: {{ msg.about }}</h3>
+    <p>Content: {{ msg.content }}</p>
+    <small>Recipient Name: {{ msg.sender.username }}</small><br />
+    <small>Date: {{ msg.dateAdded|date("F jS \\a\\t g:ia", "Europe/Sofia") }}</small>
+
+    <br />
+    {% if app.getUser() %}
+        <br/>
+        <a class="btn btn-success btn-sm" id="add">Add Message</a>
+        <div id="message"></div>
+        <br />
+    {% endif %}
+
+    <script>
+        $('#add').click(function () {
+            $('#message').empty();
+            let commentForm =
+                `
+                <form method="post" action="{{ path('user_mailbox_sentmessage', {id: msg.sender.id }) }}">
+                <div class="form-group">
+
+                        <div class="col-sm-6">
+                        <input class="form-control" type="text" name="message[about]" />
+                        <textarea class="form-control" rows="6" id="article_content"
+                                  name="comment[content]"></textarea>
+                            <input type="submit" value="Add" class="btn btn-success btn-sm">
+                            <input type="hidden" name="msgId" value="{{ msg.id }}"/>
+                        </div>
+                    </div>
+
+                </form>
+                `;
+
+            $('#message').append(commentForm);
+            $('#message').toggle();
+        })
+    </script>
+
+{% endblock %}

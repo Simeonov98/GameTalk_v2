@@ -44,20 +44,11 @@
                             </a>
                         </li>
                         <li class="nav-item">
+                            <a class="nav-link" href="{{ path('user_profile') }}">
+                                <img src="{{ asset('uploads/images/users/'~ app.getUser().profilePic) }}" width="20px" height="20px"/>
+                                Profile</a>
+                        </li>
 
-                            <a class="nav-link" href="{{ path('user_profile') }}"><img src="{{ asset('uploads/images/users/'~ app.getUser().profilePic) }}" width="20px" height="20px"/> Profile</a>
-                        </li>
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button"
-                               data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                Genres
-                            </a>
-                            <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                                <a class="dropdown-item" href="#">Action</a>
-                                <a class="dropdown-item" href="#">Another action</a>
-                                <a class="dropdown-item" href="#">Something else here</a>
-                            </div>
-                        </li>
                         <li class="nav-item">
                             <a class="nav-link" href="{{ path('article_create') }}">Create Article</a>
                         </li>

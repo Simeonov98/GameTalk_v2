@@ -78,11 +78,12 @@ class Article
     private $comments;
 
     /**
-     * @var ArrayCollection|Category[]
-     *
-     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Category", mappedBy="article")
+     * @var string
+     * @ORM\Column(name="genre", type="string")
      */
-    private $genres;
+    private $genre;
+
+
 
     /**
      * Article constructor.
@@ -273,20 +274,20 @@ class Article
     }
 
     /**
-     * @return Category[]|ArrayCollection
+     * @return string
      */
-    public function getGenres()
+    public function getGenre()
     {
-        return $this->genres;
+        return $this->genre;
     }
 
     /**
-     * @param ArrayCollection $genres
+     * @param string $genre
      * @return Article
      */
-    public function setGenres(ArrayCollection $genres)
+    public function setGenre(string $genre)
     {
-        $this->genres = $genres;
+        $this->genre = $genre;
         return $this;
     }
 

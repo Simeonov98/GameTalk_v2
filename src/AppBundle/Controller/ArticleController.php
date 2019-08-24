@@ -74,6 +74,7 @@ class ArticleController extends Controller
         $this->uploadFile($form, $article);
 
 
+
         $this->articleService->create($article);
 
         $this->addFlash("info", "Article successfully created!");
