@@ -1,0 +1,27 @@
+{% extends 'base.html.twig' %}
+
+{% block main %}
+
+    <font color="#daa520">
+        <h3>Accounts:</h3>
+        {% for user in users %}
+            <p><a href="{{ path('user_profile') }}">{{ user.email }}</a><span style="color: goldenrod">Is {{ user.getRoles }}</span> </p>
+{#            {% if user.isAdmin %}#}
+{#            <p>#}
+{#                <a href="{{ path('user_profile') }}">{{ user.email }}</a>#}
+{#                <span style="float: right">#}
+{#                        <a style="color: limegreen" methods="post" href="{{ path('make_user') }}">Make {{ user.email }} User</a>#}
+{#                </span>#}
+{#            </p>#}
+{#            {% else %}#}
+{#                <p>#}
+{#                <a href="{{ path('user_profile') }}">{{ user.email }}</a><span style="float: right">#}
+{#                        <a style="color: #daa520;" methods="post" href="{{ path('make_admin') }}">Make {{ user.email }} Admin</a>#}
+{#                    </span>#}
+{#                </p>#}
+{#            {% endif %}#}
+
+        {% endfor %}
+    </font>
+
+{% endblock %}

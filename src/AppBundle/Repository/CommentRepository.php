@@ -6,7 +6,6 @@ use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\Mapping;
 use Doctrine\ORM\OptimisticLockException;
-use Doctrine\ORM\ORMException;
 use AppBundle\Entity\Comment;
 
 /**
@@ -28,7 +27,6 @@ class CommentRepository extends EntityRepository
     /**
      * @param Comment $comment
      * @return bool
-     * @throws ORMException
      */
     public function insert(Comment $comment)
     {

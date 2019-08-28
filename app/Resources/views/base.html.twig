@@ -38,11 +38,13 @@
                         <li class="nav-item">
                             <a class="nav-link" href="{{ path('my_articles') }}">My Articles</a>
                         </li>
+
                         <li>
                             <a class="nav-link" href="{{ path('user_mailbox') }}" >({{ app.user.recipientMessages|length }})
                                 Mailbox
                             </a>
                         </li>
+
                         <li class="nav-item">
                             <a class="nav-link" href="{{ path('user_profile') }}">
                                 <img src="{{ asset('uploads/images/users/'~ app.getUser().profilePic) }}" width="20px" height="20px"/>

@@ -1,7 +1,7 @@
 {% extends 'base.html.twig' %}
 
 {% block main %}
-
+    <font color="#C0C0C0">
     {% for msg in app.session.flashbag.get('message') %}
         <div class="alert alert-success" id="info">
             {{ msg }}
@@ -29,7 +29,7 @@
             $('#message').empty();
             let commentForm =
                 `
-                <form method="post" action="{{ path('user_mailbox_sentmessage', {id: msg.sender.id }) }}">
+                <form method="post" action="{{ path('user_mailbox_sendmessage', {id: msg.sender.id }) }}">
                 <div class="form-group">
 
                         <div class="col-sm-6">
@@ -48,5 +48,5 @@
             $('#message').toggle();
         })
     </script>
-
+    </font>
 {% endblock %}

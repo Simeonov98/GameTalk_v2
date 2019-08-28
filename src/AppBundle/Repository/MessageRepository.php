@@ -25,7 +25,6 @@ class MessageRepository extends \Doctrine\ORM\EntityRepository
     /**
      * @param Message $message
      * @return bool
-     * @throws ORMException
      */
     public function insert(Message $message)
     {

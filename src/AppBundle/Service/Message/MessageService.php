@@ -31,7 +31,6 @@ class MessageService implements MessageServiceInterface
      * @param Message $message
      * @param int $recipientId
      * @return bool
-     * @throws ORMException
      */
     public function create(Message $message, int $recipientId): bool
     {

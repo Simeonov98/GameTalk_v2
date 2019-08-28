@@ -2,7 +2,12 @@
 
 namespace AppBundle\Controller;
 
+use AppBundle\Entity\Role;
+use AppBundle\Entity\User;
+use AppBundle\Form\RoleType;
+use AppBundle\Service\Role\RoleServiceInterface;
 use AppBundle\Service\User\UserServiceInterface;
+use http\Env\Request;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Routing\Annotation\Route;
@@ -14,24 +19,35 @@ class AdminController extends Controller
      * @var UserServiceInterface
      */
     private $userService;
+    /**
+     * @var RoleServiceInterface
+     */
+    private $roleService;
 
     /**
      * AdminController constructor.
      * @param UserServiceInterface $userService
+     * @param RoleServiceInterface $roleService
      */
-    public function __construct(UserServiceInterface $userService)
+    public function __construct(UserServiceInterface $userService,RoleServiceInterface $roleService)
     {
         $this->userService = $userService;
+        $this->roleService = $roleService;
     }
 
     /**
-     * @Route("/admin/users",name="admin_users",methods={"GET"})
+     * @Route("/admin/users", name="admin_users", methods={"GET"})
      * @Security("is_granted('IS_AUTHENTICATED_FULLY')")
      * @return Response
      */
     public function indexAction()
     {
-        $this->userService->getAll();
-        return $this->render('admin/users.html.twig', array('name' => $name));
+        return $this->render('admin/users.html.twig',
+            [
+                'users' => $this->userService->getAll()
+            ]
+        );
     }
+
+
 }

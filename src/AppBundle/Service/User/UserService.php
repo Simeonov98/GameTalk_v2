@@ -82,6 +82,6 @@ class UserService implements UserServiceInterface
     }
     public function getAll()
     {
-        $this->userRepository->findAll();
+        return $this->userRepository->findAll();
     }
 }

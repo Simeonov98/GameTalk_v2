@@ -17,4 +17,5 @@ class RoleService implements RoleServiceInterface
     {
         return $this->roleRepository->findOneBy(['name' => $criteria]);
     }
+
 }

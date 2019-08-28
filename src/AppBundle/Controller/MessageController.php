@@ -98,7 +98,7 @@ class MessageController extends Controller
     }
 
     /**
-     * @Route("/user/mailbox/message/{id}", name="user_mailbox_sentmessage",methods={"POST"})
+     * @Route("/user/mailbox/message/{id}", name="user_mailbox_sendmessage",methods={"POST"})
      *
      * @param Request $request
      * @param int $id
