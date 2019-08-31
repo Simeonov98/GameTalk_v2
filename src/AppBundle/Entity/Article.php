@@ -90,6 +90,8 @@ class Article
     private $comments;
 
     /**
+     * @Assert\Choice({"Action", "Adventure", "Simulation", "Strategy", "Sports", "MMO"})
+     *
      * @var string
      * @ORM\Column(name="genre", type="string")
      */
