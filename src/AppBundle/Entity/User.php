@@ -5,6 +5,7 @@ namespace AppBundle\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * User
@@ -24,6 +25,10 @@ class User implements UserInterface
     private $id;
 
     /**
+     * @Assert\Email(
+     *     message = "The email '{{ value }}' is not a valid email.",
+     *     checkMX = false
+     * )
      * @var string
      *
      * @ORM\Column(name="email", type="string", length=255, unique=true)
@@ -31,6 +36,17 @@ class User implements UserInterface
     private $email;
 
     /**
+     * @Assert\Length(
+     *      min = 10,
+     *      max = 50,
+     *      minMessage = "Your password must be at least {{ limit }} characters long",
+     *      maxMessage = "Your password cannot be longer than {{ limit }} characters"
+     * )
+     * @Assert\Regex(
+     *     pattern="/^[A-Za-z0-9]+$/",
+     *     match=true,
+     *     message="Your username must contain a capital letter, lower letter and a digit"
+     * )
      * @var string
      *
      * @ORM\Column(name="password", type="string", length=255)
@@ -38,6 +54,18 @@ class User implements UserInterface
     private $password;
 
     /**
+     * @Assert\Length(
+     *      min = 5,
+     *      max = 15,
+     *      minMessage = "Your username must be at least {{ limit }} characters long",
+     *      maxMessage = "Your username cannot be longer than {{ limit }} characters"
+     * )
+     *
+     * @Assert\Regex(
+     *     pattern="/^[A-Za-z0-9]+$/",
+     *     match=true,
+     *     message="Your username must contain a capital letter, lower letter and a digit"
+     * )
      * @var string
      *
      * @ORM\Column(name="username", type="string", length=255, unique=true)

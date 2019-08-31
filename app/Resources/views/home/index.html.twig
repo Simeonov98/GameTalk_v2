@@ -17,7 +17,7 @@
                     {% endfor %}
 
                     {% for msg in app.session.flashbag.get('errors') %}
-                        <div class="alert alert-success">
+                        <div class="alert alert-danger">
                             {{ msg }}
                             <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                                 <span aria-label="true">x</span>
@@ -30,25 +30,25 @@
 
                             <article>
                                 <header>
-                                    <h2><font color="#f0f8ff">{{ article.title }} </font> <h5> Genre: {{ article.genre }}</h5></h2>
+                                    <h2><font color="#379683">{{ article.title }} </font> <h5> Genre: <font color="#7395ae">{{ article.genre }}</font></h5></h2>
                                 </header>
                                 <a href="{{ path('article_view', {id: article.id}) }}">
                                     <img src="{{ asset('uploads/images/articles/' ~ article.image) }}" width="300px"
                                          height="150px">
                                 </a>
                                 <p>
-                                    {{ article.summary }}
+                                    <font color="#7395ae"> {{ article.summary }}</font>
                                 </p>
                                 <small>
-                                    Views: {{ article.getViewCount() }}
+                                    Views: <font color="#7395ae">{{ article.getViewCount() }}</font>
                                 </small>
                                 <br/>
                                 <small>
-                                    Date Added: {{ article.dateAdded|date("F jS \\a\\t g:ia") }}
+                                    Date Added:<font color="#7395ae"> {{ article.dateAdded|date("F jS \\a\\t g:ia") }}</font>
                                 </small>
                                 <br/>
                                 <small class="author">
-                                    Author: {{ article.author.username }}
+                                    Author:<font color="#7395ae"> {{ article.author.username }}</font>
                                 </small>
 
 

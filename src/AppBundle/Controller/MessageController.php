@@ -52,7 +52,13 @@ class MessageController extends Controller
         $message = new Message();
         $form = $this->createForm(MessageType::class, $message);
         $form->handleRequest($request);
-
+        if (strlen($form['about']->getData())<=5){
+            $this->addFlash("errors","The about section of the message must contain at least 5 characters");
+            return $this->redirectToRoute('user_message',['id' => $id]);
+        }if (strlen($form['content']->getData())<=5){
+            $this->addFlash("errors","The content of the message must contain at least 5 characters");
+            return $this->redirectToRoute('user_message',['id' => $id]);
+        }
         $this->messageService->create($message, $id);
         $this->addFlash("message", "Message sent successfully!");
         return $this->redirectToRoute('user_message', ['id' => $id]);

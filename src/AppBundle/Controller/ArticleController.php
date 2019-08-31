@@ -63,7 +63,7 @@ class ArticleController extends Controller
     /**
      * @Route("/create", methods={"POST"})
      * @param Request $request
-     * @return RedirectResponse
+     * @return Response
      * @throws \Exception
      */
     public function createProcess(Request $request)
@@ -71,9 +71,31 @@ class ArticleController extends Controller
         $article = new Article();
         $form = $this->createForm(ArticleType::class, $article);
         $form->handleRequest($request);
+
+        if (strlen($form['title']->getData()) < 4) {
+            $this->addFlash("errors", "Article title must be at least 4 characters long");
+            return $this->returnArticleView($article);
+        }
+        if (strlen($form['title']->getData()) > 50) {
+            $this->addFlash("errors", "Article title cannot be longer than 50 characters");
+            return $this->returnArticleView($article);
+        }
+        if (strlen($form['content']->getData()) < 50) {
+            $this->addFlash("errors", "Article content must be at least 50 characters long");
+            return $this->returnArticleView($article);
+        }
+        if ($form['image'] == null) {
+            $this->addFlash("errors", "Article must have an image");
+            $this->returnArticleView($article);
+        }
+        if ($form['genre']->getData() != "Action" && $form['genre']->getData() != "Adventure" &&
+            $form['genre']->getData() != "Simulation" && $form['genre']->getData() != "Strategy" &&
+            $form['genre']->getData() != "Sports" && $form['genre']->getData() != "MMO") {
+            $this->addFlash("errors", "Article genre should be one of the following: Action, Adventure, Simulation, Strategy, Sports or MMO");
+            return $this->returnArticleView($article);
+        }
+
         $this->uploadFile($form, $article);
-
-
 
         $this->articleService->create($article);
 
@@ -173,7 +195,8 @@ class ArticleController extends Controller
         $article = $this->articleService->getOne($id);
 
         $form = $this->createForm(ArticleType::class, $article);
-        $form->remove('imageURL');
+        $form->remove('image');
+        $form->remove('genre');
         $form->handleRequest($request);
 
         $this->articleService->delete($article);
@@ -182,15 +205,11 @@ class ArticleController extends Controller
 
     }
 
-    /**
-     * @Route("/article/{id}", name="article_view")
-     *
-     * @param $id
-     * @return Response
-     */
+
     /**
      * @param FormInterface $form
      * @param Article $article
+     * @return Response
      */
     private function uploadFile(FormInterface $form, Article $article)
     {
@@ -198,13 +217,21 @@ class ArticleController extends Controller
          * @var UploadedFile $file
          */
         $file = $form['image']->getData();
-        $fileName = md5(uniqid()) . '.' . $file->guessExtension();
 
+        $fileName = md5(uniqid()) . '.' . $file->guessExtension();
+        if ($file ===null){
+            $this->addFlash("errors","Article must have an image");
+            return $this->returnArticleView($article);
+        }
         if ($file) {
-            $file->move($this->getParameter('article_directory'), $fileName);
+            $file->move(
+                $this->getParameter('article_directory'),
+                $fileName
+            );
 
             $article->setImage($fileName);
         }
+
     }
 
     /**
@@ -267,5 +294,18 @@ class ArticleController extends Controller
                 'articles' => $articles
             ]
         );
+    }
+
+    /**
+     * @param Article $article
+     * @return Response
+     */
+    private function returnArticleView(Article $article): Response
+    {
+        return $this->render("article/create.html.twig",
+            [
+                'article' => $article,
+                'form' => $this->createForm(ArticleType::class)->createView()
+            ]);
     }
 }

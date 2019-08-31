@@ -4,6 +4,7 @@ namespace AppBundle\Entity;
 
 use DateTime;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Comment
@@ -23,6 +24,11 @@ class Comment
     private $id;
 
     /**
+     *
+     * @Assert\Length(
+     *     min="5",
+     *     minMessage="Your comment must contain at least 5 symbols"
+     * )
      * @var string
      *
      * @ORM\Column(name="content", type="text")

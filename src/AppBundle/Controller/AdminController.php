@@ -2,14 +2,13 @@
 
 namespace AppBundle\Controller;
 
-use AppBundle\Entity\Role;
 use AppBundle\Entity\User;
-use AppBundle\Form\RoleType;
+use AppBundle\Form\UserType;
 use AppBundle\Service\Role\RoleServiceInterface;
 use AppBundle\Service\User\UserServiceInterface;
-use http\Env\Request;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -29,7 +28,7 @@ class AdminController extends Controller
      * @param UserServiceInterface $userService
      * @param RoleServiceInterface $roleService
      */
-    public function __construct(UserServiceInterface $userService,RoleServiceInterface $roleService)
+    public function __construct(UserServiceInterface $userService, RoleServiceInterface $roleService)
     {
         $this->userService = $userService;
         $this->roleService = $roleService;
@@ -48,6 +47,7 @@ class AdminController extends Controller
             ]
         );
     }
+
 
 
 }

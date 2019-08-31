@@ -19,4 +19,6 @@ interface UserServiceInterface
     public function currentUser(): ?User;
 
     public function getAll();
+
+    public function delete(User $user): bool;
 }

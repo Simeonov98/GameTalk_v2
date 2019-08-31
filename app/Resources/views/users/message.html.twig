@@ -10,9 +10,18 @@
                 </button>
             </div>
         {% endfor %}
-        <h1>Hello {{ user.email }}</h1>
+        {% for msg in app.session.flashbag.get('errors') %}
+            <div class="alert alert-danger">
+                {{ msg }}
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-label="true">x</span>
+                </button>
+            </div>
+        {% endfor %}
+        <br/>
+        <h3>This is the profile of {{ user.email }}</h3>
 
-        <h3>{{ user.username }}</h3>
+        <h5>Their username on the blog is: {{ user.username }}</h5>
         <br/>
 
         <div><img class="rounded-circle" src="{{ asset('uploads/images/users/'

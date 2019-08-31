@@ -50,6 +50,10 @@ class CommentController extends Controller
         $comment = new Comment();
         $form = $this->createForm(CommentType::class, $comment);
         $form->handleRequest($request);
+        if (strlen($form['content']->getData())<=5){
+            $this->addFlash("errors","Your comment must contain at least 5 symbols");
+            return $this->redirectToRoute('article_view',['id' => $id]);
+        }
 
         $this->addFlash("message", "Comment created successfully");
         $this->commentService->create($comment,$id);

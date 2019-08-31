@@ -84,4 +84,13 @@ class UserService implements UserServiceInterface
     {
         return $this->userRepository->findAll();
     }
+
+    /**
+     * @param User $user
+     * @return bool
+     */
+    public function delete(User $user): bool
+    {
+        return $this->userRepository->remove($user);
+    }
 }

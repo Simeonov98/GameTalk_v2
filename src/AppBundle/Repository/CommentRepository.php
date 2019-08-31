@@ -2,6 +2,7 @@
 
 namespace AppBundle\Repository;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\Mapping;
@@ -32,6 +33,21 @@ class CommentRepository extends EntityRepository
     {
         try {
             $this->_em->persist($comment);
+            $this->_em->flush();
+            return true;
+        } catch (OptimisticLockException $e) {
+            return false;
+        }
+    }
+
+    /**
+     * @param ArrayCollection|Comment[]
+     * @return bool
+     */
+    public function remove($comment)
+    {
+        try {
+            $this->_em->remove($comment);
             $this->_em->flush();
             return true;
         } catch (OptimisticLockException $e) {

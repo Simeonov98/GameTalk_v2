@@ -56,7 +56,10 @@ class UserController extends Controller
         $form = $this->createForm(UserType::class, $user);
         $form->handleRequest($request);
 
-
+        if (!preg_match('/^[A-Za-z0-9]+$/',$form['username']->getData())){
+            $this->addFlash("errors","Your username must contain one upper letter, one lower letter and a digit");
+            return $this->returnRegisterView($user);
+        }
         if (null !== $this->userService->findOneByEmail($form['email']->getData())) {
             $email = $this->userService->findOneByEmail($form['email']->getData())->getEmail();
             $this->addFlash("errors", "Email $email already taken!");
@@ -65,6 +68,10 @@ class UserController extends Controller
 
         if ($form['password']['first']->getData() !== $form['password']['second']->getData()) {
             $this->addFlash("errors", "Password mismatch!");
+            if (strlen($form['password']['first']->getData())||strlen($form['password']['second']->getData())<=5){
+                $this->addFlash("errors", "Your password should be at least 5 characters long ");
+            return $this->returnRegisterView($user);
+            }
             return $this->returnRegisterView($user);
         }
 
@@ -83,7 +90,7 @@ class UserController extends Controller
         return $this->render("users/profile.html.twig",
             [
                 'user' => $this->userService->currentUser(),
-                'msg' =>$this->messageService->getAllUnseenByUser()
+                'msg' => $this->messageService->getAllUnseenByUser()
             ]);
     }
 
@@ -160,6 +167,7 @@ class UserController extends Controller
         }
     }
 
+
     /**
      * @param User $user
      * @return Response
@@ -172,5 +180,7 @@ class UserController extends Controller
                 'form' => $this->createForm(UserType::class)->createView()
             ]);
     }
+
+
 
 }

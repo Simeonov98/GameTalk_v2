@@ -4,6 +4,7 @@ namespace AppBundle\Entity;
 
 use DateTime;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Message
@@ -23,6 +24,10 @@ class Message
     private $id;
 
     /**
+     * @Assert\Length(
+     *     min="5",
+     *     minMessage="The about section of the message must contain at least 5 characters"
+     * )
      * @var string
      *
      * @ORM\Column(name="about", type="string", length=255)
@@ -30,6 +35,10 @@ class Message
     private $about;
 
     /**
+     * @Assert\Length(
+     *     min="5",
+     *     minMessage="The content of the message must contain at least 5 characters"
+     * )
      * @var string
      *
      * @ORM\Column(name="content", type="text")

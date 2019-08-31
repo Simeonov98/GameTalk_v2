@@ -3,16 +3,23 @@
 {% block main %}
     <font color="#C0C0C0" xmlns="h3, div">
 
-        <h1>Hello {{ user.email }}</h1>
-
-        <h3>{{ user.username }}</h3>
+        <span style="float:left"><h3>Your <profile></profile>, <font color="379683">{{ user.username }}</font></h3></span>
+        <span style="float:right">Your Email: <font color="7395ae">{{ user.email }}</font></span>
         <br/>
+        <br/>
+
 
         <div><img  src="{{ asset('uploads/images/users/'
                 ~ user.profilePic)  }}" width="100px" height="100px" />
         </div>
         <br/>
-
+        {% if user.isAdmin %}
+            <span>Role:<font color="#b8860b"> You are Admin</font></span>
+        {% else %}
+            <span>Role:<font color="7395ae"> You are User</font></span>
+        {% endif %}
+        <br/>
+        <br/>
         <a href="{{ path('user_edit_profile') }}" class="btn btn-success btn-sm">Edit Profile</a>
         <br/><br/>
         <p>
@@ -20,6 +27,7 @@
                 <span class="glyphicon glyphicon-envelope">({{ msg|length }})</span> Mailbox
             </a>
         </p>
+
     </font>
 
 {% endblock %}

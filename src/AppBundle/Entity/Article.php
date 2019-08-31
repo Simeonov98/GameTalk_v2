@@ -6,6 +6,7 @@ use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Exception;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Article
@@ -16,6 +17,7 @@ use Exception;
 class Article
 {
     /**
+     *
      * @var int
      *
      * @ORM\Column(name="id", type="integer")
@@ -25,6 +27,12 @@ class Article
     private $id;
 
     /**
+     * @Assert\Length(
+     *      min = 5,
+     *      max = 50,
+     *      minMessage = "Your first name must be at least {{ limit }} characters long",
+     *      maxMessage = "Your first name cannot be longer than {{ limit }} characters"
+     * )
      * @var string
      *
      * @ORM\Column(name="title", type="string", length=255)
@@ -32,6 +40,10 @@ class Article
     private $title;
 
     /**
+     * @Assert\Length(
+     *      min = 50,
+     *      minMessage = "Article content must be at least {{ limit }} characters long"
+     * )
      * @var string
      *
      * @ORM\Column(name="content", type="text")
@@ -270,7 +282,13 @@ class Article
      */
     public function setSummary()
     {
-        $this->summary = substr($this->getContent(),0,strlen($this->getContent())/2) . "...";
+        $content=$this->getContent();
+        if(strlen($content)<20){
+            $this->summary = substr($content,0,strlen($content)/2) . "..." ;
+        }else{
+            $this->summary = substr($content,0,strlen($content)/4.1) . "..." ;
+        }
+
     }
 
     /**

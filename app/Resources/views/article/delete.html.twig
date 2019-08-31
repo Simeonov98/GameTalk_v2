@@ -3,7 +3,7 @@
 
 
 {% block main %}
-
+<font color="#C0C0C0">
     <div class="container body-content span=8 offset=2">
         <div class="well">
             <form class="form-horizontal" action="{{ path('article_delete', {id: article.id}) }}" method="POST">
@@ -39,5 +39,6 @@
             </form>
         </div>
     </div>
+</font>
 {% endblock %}
 

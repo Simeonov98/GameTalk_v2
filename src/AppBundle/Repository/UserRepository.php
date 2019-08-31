@@ -44,4 +44,19 @@ class UserRepository extends \Doctrine\ORM\EntityRepository
             return false;
         }
     }
+
+    /**
+     * @param User $user
+     * @return bool
+     */
+    public function remove(User $user)
+    {
+        try {
+            $this->_em->remove($user);
+            $this->_em->flush();
+            return true;
+        } catch (OptimisticLockException $e) {
+            return false;
+        }
+    }
 }

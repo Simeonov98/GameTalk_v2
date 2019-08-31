@@ -4,6 +4,7 @@
 namespace AppBundle\Service\Comment;
 
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\ORMException;
 use AppBundle\Entity\Comment;
 use AppBundle\Repository\CommentRepository;
@@ -64,6 +65,15 @@ class CommentService implements CommentServiceInterface
             ->setArticle($this->articleService->getOne($articleId));
 
         return $this->commentRepository->insert($comment);
+    }
+
+    /**
+     * @param ArrayCollection|Comment[]
+     * @return bool
+     */
+    public function delete($comment): bool
+    {
+        return $this->commentRepository->remove($comment);
     }
 
 
